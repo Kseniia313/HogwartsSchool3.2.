@@ -26,12 +26,14 @@ private final StudentRepository studentRepository;
 
     @Override
     public Student readStudentById(long id) {
+
        return studentRepository.findById(id)
                .orElseThrow(()->new StudentNotFoundException("Студент c id " + id + " не найден"));
     }
 
     @Override
     public Student updateStudent(Student student) {
+
    readStudentById(student.getId());
 
 return studentRepository.save(student);

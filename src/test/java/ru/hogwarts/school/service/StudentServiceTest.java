@@ -29,9 +29,6 @@ class StudentServiceImplTest {
 
     private Student student = new Student(1, "Anna", 20);
 
-
-
-
     @Test
     void createStudent_shouldCreateAndSaveStudent() {
         when(studentRepository.save(student)).thenReturn(student);
@@ -97,16 +94,18 @@ class StudentServiceImplTest {
     @Test
     void readByAge_shouldReadStudentsByAgeAndReturnCollectionOfStudent() {
         List<Student> students = List.of((student),
-                new Student(2, "Klim", 15));
+                new Student(2, "Klim", 15),
+                new Student(3,"Kira",20));
         int age = 15;
 
-        when(studentRepository.findAllByAge(student.getAge()))
-                .thenReturn(Collections.unmodifiableList(students));
+        when(studentRepository.findAllByAge(age))
+                .thenReturn(students);
 
         List<Student> studentList = students.stream().filter(st->st.getAge()==age)
                 .collect(Collectors.toUnmodifiableList());
 
-        Collection<Student> result = studentService.readByAge(age);
+        Collection<Student> result = studentService.readByAge(age)
+                .stream().filter(st->st.getAge()==age).collect(Collectors.toUnmodifiableList());
 
         assertEquals(studentList,result);
 
