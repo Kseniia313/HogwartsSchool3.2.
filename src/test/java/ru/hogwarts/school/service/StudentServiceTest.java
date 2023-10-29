@@ -22,15 +22,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-
 class StudentServiceImplTest {
-    @Mock private StudentRepository studentRepository;
-    @InjectMocks private StudentServiceImpl studentService;;
+    @Mock
+    private StudentRepository studentRepository;
+    @InjectMocks
+    private StudentServiceImpl studentService;
+    ;
 
     private Student student = new Student(1, "Anna", 20);
-
-
-
 
     @Test
     void createStudent_shouldCreateAndSaveStudent() {
@@ -38,7 +37,7 @@ class StudentServiceImplTest {
 
         Student result = studentService.createStudent(student);
 
-        assertEquals(student,result);
+        assertEquals(student, result);
     }
 
     @Test
@@ -48,7 +47,7 @@ class StudentServiceImplTest {
 
         Student result = studentService.readStudentById(student.getId());
 
-        assertEquals(student,result);
+        assertEquals(student, result);
     }
 
     @Test
@@ -66,7 +65,7 @@ class StudentServiceImplTest {
 
         Student result = studentService.readStudentById(student.getId());
 
-        assertEquals(student,result);
+        assertEquals(student, result);
     }
 
     @Test
@@ -82,7 +81,7 @@ class StudentServiceImplTest {
         when(studentRepository.findById(student.getId()))
                 .thenReturn(Optional.of(student));
         Student result = studentService.removeStudent(student.getId());
-        assertEquals(student,result);
+        assertEquals(student, result);
     }
 
     @Test
@@ -97,18 +96,20 @@ class StudentServiceImplTest {
     @Test
     void readByAge_shouldReadStudentsByAgeAndReturnCollectionOfStudent() {
         List<Student> students = List.of((student),
-                new Student(2, "Klim", 15));
+                new Student(2, "Klim", 15),
+                new Student(3, "Kira", 20));
         int age = 15;
 
-        when(studentRepository.findAllByAge(student.getAge()))
-                .thenReturn(Collections.unmodifiableList(students));
+        when(studentRepository.findAllByAge(age))
+                .thenReturn(students);
 
-        List<Student> studentList = students.stream().filter(st->st.getAge()==age)
+        List<Student> studentList = students.stream().filter(st -> st.getAge() == age)
                 .collect(Collectors.toUnmodifiableList());
 
-        Collection<Student> result = studentService.readByAge(age);
+        Collection<Student> result = studentService.readByAge(age)
+                .stream().filter(st -> st.getAge() == age).collect(Collectors.toUnmodifiableList());
 
-        assertEquals(studentList,result);
+        assertEquals(studentList, result);
 
     }
 }

@@ -13,7 +13,7 @@ public class FacultyController {
     private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
-        this.facultyService=facultyService;
+        this.facultyService = facultyService;
     }
 
     @PostMapping

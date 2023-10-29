@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
-
 
 
 @Service
 
 public class StudentServiceImpl implements StudentService {
-private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -26,15 +26,17 @@ private final StudentRepository studentRepository;
 
     @Override
     public Student readStudentById(long id) {
-       return studentRepository.findById(id)
-               .orElseThrow(()->new StudentNotFoundException("Студент c id " + id + " не найден"));
+
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Студент c id " + id + " не найден"));
     }
 
     @Override
     public Student updateStudent(Student student) {
-   readStudentById(student.getId());
 
-return studentRepository.save(student);
+        readStudentById(student.getId());
+
+        return studentRepository.save(student);
     }
 
     @Override
@@ -45,9 +47,8 @@ return studentRepository.save(student);
     }
 
     @Override
-    public Collection<Student> readByAge(int age)
-    {
+    public Collection<Student> readByAge(int age) {
         return studentRepository.findAllByAge(age);
     }
 
-    }
+}
