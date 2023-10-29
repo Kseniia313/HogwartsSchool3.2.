@@ -4,60 +4,52 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.FacultyAlreadyExistException;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
-    private Map<Long, Faculty> facultiesRepository = new HashMap<>();
-    private Long id = 0l;
+    private final FacultyRepository facultiesRepository;
+
+    public FacultyServiceImpl(FacultyRepository facultiesRepository) {
+        this.facultiesRepository = facultiesRepository;
+    }
 
     @Override
     public Faculty createFaculty(Faculty faculty) {
-        if (facultiesRepository.containsValue(faculty)) {
-            throw new FacultyAlreadyExistException("Факультет " +faculty+"  уже существует");
-        }
-        long facultyId = ++id;
-        faculty.setId(id);
-        facultiesRepository.put(facultyId, faculty);
-        return faculty;
+        return facultiesRepository.save(faculty);
     }
 
     @Override
     public Faculty getFacultyById(long facultyId) {
-        Faculty faculty = facultiesRepository.get(facultyId);
 
-        if (faculty == null) {
-            throw new FacultyNotFoundException("Факультета с id " + facultyId + " не существует ");
-        }
+        return facultiesRepository.findById(facultyId)
+                .orElseThrow(() -> new FacultyNotFoundException("Факультета с id " + facultyId + " не существует "));
 
-        return faculty;
     }
 
     @Override
     public Faculty upDateFaculty(Faculty faculty) {
-        if (!facultiesRepository.containsKey(faculty.getId())) {
-            throw new FacultyNotFoundException("Факультет с id " + faculty.getId() + " не найден ");
-        }
-        facultiesRepository.put(faculty.getId(), faculty);
-        return faculty;
+        getFacultyById(faculty.getId());
+
+        return facultiesRepository.save(faculty);
     }
 
     @Override
     public Faculty deleteFaculty(long facultyId) {
-        Faculty faculty = facultiesRepository.remove(facultyId);
-        if (faculty == null) {
-            throw new FacultyNotFoundException("Факультет с id " + facultyId + " не найден ");
-        }
+
+       Faculty faculty = getFacultyById(facultyId);
+        facultiesRepository.delete(faculty);
         return faculty;
     }
 @Override
     public Collection<Faculty> findByColor(String color) {
-    return facultiesRepository.values().stream()
-            .filter(faculty -> Objects.equals(color, faculty.getColor()))
-            .collect(Collectors.toUnmodifiableList());
+    return facultiesRepository.findAllByColor(color);
     }
 }

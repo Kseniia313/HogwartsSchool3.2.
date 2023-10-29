@@ -36,7 +36,7 @@ public class FacultyController {
         return facultyService.deleteFaculty(id);
     }
 
-    @GetMapping
+    @GetMapping("/color")
     public Collection<Faculty> getByColor(@RequestParam String color) {
         return facultyService.findByColor(color);
     }

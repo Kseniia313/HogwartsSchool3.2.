@@ -2,109 +2,113 @@ package ru.hogwarts.school.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 
 class StudentServiceImplTest {
-    private StudentService underTest= new StudentServiceImpl();
+    @Mock private StudentRepository studentRepository;
+    @InjectMocks private StudentServiceImpl studentService;;
 
-    @BeforeEach
-    void beforeEach() {
-        underTest = new StudentServiceImpl();
-    }
+    private Student student = new Student(1, "Anna", 20);
 
-    private Student student = new Student("Anna", 1, 20);
+
 
 
     @Test
-    void createStudent_shouldCreateStudentAndReturnStudent() {
-        Student result = underTest.createStudent(student);
+    void createStudent_shouldCreateAndSaveStudent() {
+        when(studentRepository.save(student)).thenReturn(student);
+
+        Student result = studentService.createStudent(student);
 
         assertEquals(student,result);
     }
 
     @Test
-    void createStudent_shouldThrowExceptionWhenStudentIsAlreadyExists() {
-        underTest.createStudent(student);
-        StudentAlreadyExistException studentAlreadyExistException = assertThrows(StudentAlreadyExistException.class,
-                () -> underTest.createStudent(student));
+    void readStudentById_shouldFindStudentByIdAndReturnStudent() {
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.of(student));
+
+        Student result = studentService.readStudentById(student.getId());
+
+        assertEquals(student,result);
     }
 
     @Test
-    void readStudentById_shouldGetStudentByIdAndReturnStudent() {
+    void readStudentById_shouldThrowExceptionWhenStudentIdIsNotFound() {
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.empty());
 
-        Student result = underTest.createStudent(student);
-        Student expectedStudent = underTest.readStudentById(1);
-        assertEquals(expectedStudent,result);
+        assertThrows(StudentNotFoundException.class, () -> studentService.readStudentById(student.getId()));
     }
 
     @Test
-    void readStudentById_shouldThrowExceptionWhenStudentIsNotFound() {
-        Student student1 = new Student("Anna", 2, 20);
-        underTest.createStudent(student);
-        StudentNotFoundException studentNotFoundException = assertThrows(StudentNotFoundException.class,
-                () -> underTest.readStudentById(2));
-    }
+    void updateStudent_shouldUpDateStudentAndReturnStudent() {
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.of(student));
 
-    @Test
-    void updateStudent_shouldChangeStudentAndReturnStudent() {
-
-        underTest.createStudent(student);
-        student.setAge(21);
-        Student result = underTest.updateStudent(student);
+        Student result = studentService.readStudentById(student.getId());
 
         assertEquals(student,result);
     }
 
     @Test
     void updateStudent_shouldThrowExceptionWhenStudentIsNotFound() {
-        Student student1 = new Student("Anna", 2, 20);
-        underTest.createStudent(student);
-        StudentNotFoundException studentNotFoundException=assertThrows(StudentNotFoundException.class,
-                ()-> underTest.updateStudent(student1));
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.empty());
+        assertThrows(StudentNotFoundException.class,
+                () -> studentService.readStudentById(student.getId()));
     }
 
     @Test
     void removeStudent_shouldRemoveStudentAndReturnRemovedStudent() {
-        underTest.createStudent(student);
-        Student result = underTest.removeStudent(1);
-        assertEquals(student, result);
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.of(student));
+        Student result = studentService.removeStudent(student.getId());
+        assertEquals(student,result);
     }
 
     @Test
     void removeStudent_shouldThrowExceptionWhenStudentNotFound() {
-        underTest.createStudent(student);
-        underTest.removeStudent(1);
-        StudentNotFoundException studentNotFoundException = assertThrows(StudentNotFoundException.class,
-                () -> underTest.removeStudent(2));
+        when(studentRepository.findById(student.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class,
+                () -> studentService.removeStudent(student.getId()));
     }
 
     @Test
-    void readByAge_shouldGetStudentsByAgeAndReturnUnmodifiableList() {
-     int age = 25;
-        Student student1 = new Student("Ekaterina", 1,25);
-        List<Student> students = List.of(student, student1);
-        students.stream().filter(student2 -> student2.getAge() == age);
+    void readByAge_shouldReadStudentsByAgeAndReturnCollectionOfStudent() {
+        List<Student> students = List.of((student),
+                new Student(2, "Klim", 15));
+        int age = 15;
 
-    Student result = (Student) underTest.readByAge(age);
+        when(studentRepository.findAllByAge(student.getAge()))
+                .thenReturn(Collections.unmodifiableList(students));
 
-        assertEquals(students,result);
+        List<Student> studentList = students.stream().filter(st->st.getAge()==age)
+                .collect(Collectors.toUnmodifiableList());
 
+        Collection<Student> result = studentService.readByAge(age);
 
-
-
-
-
-
-
-
-
+        assertEquals(studentList,result);
 
     }
 }
