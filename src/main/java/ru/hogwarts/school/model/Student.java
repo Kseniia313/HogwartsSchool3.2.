@@ -1,9 +1,11 @@
 package ru.hogwarts.school.model;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
+
 @Entity
 
 
@@ -15,7 +17,7 @@ public class Student {
 
     private int age;
 
-    public Student(long id, String name , int age) {
+    public Student(long id, String name, int age) {
         this.name = name;
         this.id = id;
         this.age = age;

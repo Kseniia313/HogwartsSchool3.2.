@@ -44,12 +44,13 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Faculty deleteFaculty(long facultyId) {
 
-       Faculty faculty = getFacultyById(facultyId);
+        Faculty faculty = getFacultyById(facultyId);
         facultiesRepository.delete(faculty);
         return faculty;
     }
-@Override
+
+    @Override
     public Collection<Faculty> findByColor(String color) {
-    return facultiesRepository.findAllByColor(color);
+        return facultiesRepository.findAllByColor(color);
     }
 }

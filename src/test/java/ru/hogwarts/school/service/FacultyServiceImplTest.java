@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FacultyServiceImplTest {
-@Mock
-private FacultyRepository facultyRepository;
-@InjectMocks
-private FacultyServiceImpl facultyService;
+    @Mock
+    private FacultyRepository facultyRepository;
+    @InjectMocks
+    private FacultyServiceImpl facultyService;
 
     private Faculty faculty = new Faculty(1, "Math", "green");
 
@@ -48,7 +48,7 @@ private FacultyServiceImpl facultyService;
 
         Faculty result = facultyService.getFacultyById(faculty.getId());
 
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
@@ -67,7 +67,7 @@ private FacultyServiceImpl facultyService;
 
         Faculty result = facultyService.getFacultyById(faculty.getId());
 
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
@@ -84,11 +84,10 @@ private FacultyServiceImpl facultyService;
                 .thenReturn(Optional.of(faculty));
 
         Faculty result = facultyService.deleteFaculty(faculty.getId());
-        assertEquals(faculty,result);
+        assertEquals(faculty, result);
     }
 
     @Test
-
     void removeFaculty_shouldThrowExceptionWhenFacultyNotFound() {
         when(facultyRepository.findById(faculty.getId()))
                 .thenReturn(Optional.empty());
@@ -102,21 +101,21 @@ private FacultyServiceImpl facultyService;
     void findByColor_shouldGetFacultyByColorAndReturnCollectionOfFaculties() {
         List<Faculty> faculties = List.of((faculty),
                 new Faculty(2, "History", "red"),
-                new Faculty(3,"Chemistry","green"));
+                new Faculty(3, "Chemistry", "green"));
         String color = "green";
 
         when(facultyRepository.findAllByColor(color))
                 .thenReturn(faculties);
 
-        List<Faculty> facultyList = faculties.stream().filter(fc->fc.getColor()==color)
+        List<Faculty> facultyList = faculties.stream().filter(fc -> fc.getColor() == color)
                 .collect(Collectors.toUnmodifiableList());
 
         Collection<Faculty> result = facultyService.findByColor(color)
-                .stream().filter(fc->fc.getColor()==color).collect(Collectors.toUnmodifiableList());
+                .stream().filter(fc -> fc.getColor() == color).collect(Collectors.toUnmodifiableList());
 
-        assertEquals(facultyList,result);
+        assertEquals(facultyList, result);
 
     }
-    }
+}
 
 
