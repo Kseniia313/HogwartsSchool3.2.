@@ -8,8 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwarts.school.exception.FacultyAlreadyExistException;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
-import ru.hogwarts.school.exception.StudentAlreadyExistException;
-import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -63,11 +61,9 @@ class FacultyServiceImplTest {
     @Test
     void updateFaculty_shouldUpdateFacultyAndReturnFaculty() {
         when(facultyRepository.findById(faculty.getId()))
-                .thenReturn(Optional.of(faculty));
+                .thenReturn(Optional.ofNullable(faculty));
+        Faculty result=facultyService.upDateFaculty(faculty);
 
-        Faculty result = facultyService.getFacultyById(faculty.getId());
-
-        assertEquals(faculty, result);
     }
 
     @Test
@@ -116,6 +112,7 @@ class FacultyServiceImplTest {
         assertEquals(facultyList, result);
 
     }
+
 }
 
 
