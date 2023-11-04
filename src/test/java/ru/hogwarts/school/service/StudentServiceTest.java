@@ -22,7 +22,7 @@ class StudentServiceImplTest {
     private StudentServiceImpl studentService;
 
 
-    private Student student = new Student(1, "Anna", 25);
+    private Student student = new Student(1, "Anna", 20);
 
     private Faculty faculty = new Faculty(1, "history", "red");
 
@@ -95,14 +95,12 @@ class StudentServiceImplTest {
     @Test
     void readByAge_shouldReadStudentsByAgeAndReturnCollectionOfStudent() {
         int age = 15;
-
-        when(studentRepository.findAllByAge(age)).thenReturn(students);
-
         List<Student> studentList = students.stream().filter(st -> st.getAge() == age)
                 .collect(Collectors.toUnmodifiableList());
 
-        Collection<Student> result = studentService.readByAge(age)
-                .stream().filter(st -> st.getAge() == age).collect(Collectors.toUnmodifiableList());
+        when(studentRepository.findAllByAge(age)).thenReturn(studentList);
+
+        Collection<Student> result = studentService.readByAge(age);
 
         assertEquals(studentList, result);
 
@@ -110,20 +108,16 @@ class StudentServiceImplTest {
 
     @Test
     void findByAgeBetween_shouldFindStudentsBetweenAgeAndReturnCollectionOfStudents() {
-        int min = 15;
-        int max = 25;
-        int age = student.getAge();
+        int min = students.get(1).getAge();
+        int max = students.get(2).getAge();
 
-        when(studentRepository.findByAgeBetween(min, max)).thenReturn(students);
+        List<Student> studentList = students.stream().filter(st -> st.getAge() >min&&st.getAge()<max)
+                .collect(Collectors.toUnmodifiableList());
 
-        Optional<Student> studentList = students.stream().filter(st -> st.getAge() == student.getAge())
-                .min((Comparator.comparingInt(st -> min)
-                        .thenComparingInt(st -> max)));
+        when(studentRepository.findByAgeBetween(min, max)).thenReturn(studentList);
 
-        Optional<Student> result = studentService.findByAgeBetween(min, max)
-                .stream().filter(st -> st.getAge() == student.getAge())
-                .min((Comparator.comparingInt(st -> min)
-                        .thenComparingInt(st -> max)));
+        Collection<Student> result = studentService.findByAgeBetween(min,max);
+
         assertEquals(studentList, result);
 
     }
@@ -136,13 +130,12 @@ class StudentServiceImplTest {
 
         long facultyId = faculty.getId();
 
-        when(studentRepository.findAllByFaculty_Id(facultyId)).thenReturn(students);
-
             List<Student> studentList = students.stream().filter(st->st.getFaculty()==faculty)
-                            .collect(Collectors.toUnmodifiableList());
+                    .collect(Collectors.toUnmodifiableList());
 
-         List < Student > result = (List<Student>) studentService.getStudentsByFacultyId(facultyId)
-                 .stream().filter(st->st.getFaculty()==faculty).collect(Collectors.toUnmodifiableList());
+        when(studentRepository.findAllByFaculty_Id(facultyId)).thenReturn(studentList);
+
+         List < Student > result = (List<Student>) studentService.getStudentsByFacultyId(facultyId);
 
             assertEquals(studentList, result);
     }
