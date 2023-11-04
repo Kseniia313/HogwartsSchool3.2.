@@ -1,25 +1,18 @@
 package ru.hogwarts.school.service;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
@@ -27,9 +20,15 @@ class StudentServiceImplTest {
     private StudentRepository studentRepository;
     @InjectMocks
     private StudentServiceImpl studentService;
-    ;
 
-    private Student student = new Student(1, "Anna", 20);
+
+    private Student student = new Student(1, "Anna", 25);
+
+    private Faculty faculty = new Faculty(1, "history", "red");
+
+    private List<Student> students = List.of((student),
+            new Student(2, "Klim", 15),
+            new Student(3, "Kira", 25));
 
     @Test
     void createStudent_shouldCreateAndSaveStudent() {
@@ -95,13 +94,9 @@ class StudentServiceImplTest {
 
     @Test
     void readByAge_shouldReadStudentsByAgeAndReturnCollectionOfStudent() {
-        List<Student> students = List.of((student),
-                new Student(2, "Klim", 15),
-                new Student(3, "Kira", 20));
         int age = 15;
 
-        when(studentRepository.findAllByAge(age))
-                .thenReturn(students);
+        when(studentRepository.findAllByAge(age)).thenReturn(students);
 
         List<Student> studentList = students.stream().filter(st -> st.getAge() == age)
                 .collect(Collectors.toUnmodifiableList());
@@ -112,4 +107,60 @@ class StudentServiceImplTest {
         assertEquals(studentList, result);
 
     }
-}
+
+    @Test
+    void findByAgeBetween_shouldFindStudentsBetweenAgeAndReturnCollectionOfStudents() {
+        int min = 15;
+        int max = 25;
+        int age = student.getAge();
+
+        when(studentRepository.findByAgeBetween(min, max)).thenReturn(students);
+
+        Optional<Student> studentList = students.stream().filter(st -> st.getAge() == student.getAge())
+                .min((Comparator.comparingInt(st -> min)
+                        .thenComparingInt(st -> max)));
+
+        Optional<Student> result = studentService.findByAgeBetween(min, max)
+                .stream().filter(st -> st.getAge() == student.getAge())
+                .min((Comparator.comparingInt(st -> min)
+                        .thenComparingInt(st -> max)));
+        assertEquals(studentList, result);
+
+    }
+
+        @Test
+    void getStudentsByFacultyId_shouldFindStudentsByFacultyIdAndReturnCollectionOfStudents() {
+
+      students.get(0).setFaculty(faculty);
+      students.get(1).setFaculty(faculty);
+
+        long facultyId = faculty.getId();
+
+        when(studentRepository.findAllByFaculty_Id(facultyId)).thenReturn(students);
+
+            List<Student> studentList = students.stream().filter(st->st.getFaculty()==faculty)
+                            .collect(Collectors.toUnmodifiableList());
+
+         List < Student > result = (List<Student>) studentService.getStudentsByFacultyId(facultyId)
+                 .stream().filter(st->st.getFaculty()==faculty).collect(Collectors.toUnmodifiableList());
+
+            assertEquals(studentList, result);
+    }
+    @Test
+    void getFacultyByStudentId_shouldFindAndReturnFacultyByStudentId() {
+
+            student.setFaculty(faculty);
+            Faculty faculty1 = student.getFaculty();
+
+            when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+
+            Faculty result = studentService.getFacultyByStudentId(student.getId());
+
+            assertEquals(faculty1, result);
+        }
+    }
+
+
+
+
+
