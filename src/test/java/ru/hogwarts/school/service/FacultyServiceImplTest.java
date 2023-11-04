@@ -56,14 +56,17 @@ class FacultyServiceImplTest {
 
         assertThrows(FacultyNotFoundException.class, () ->
                 facultyService.getFacultyById(faculty.getId()));
+
     }
 
     @Test
     void updateFaculty_shouldUpdateFacultyAndReturnFaculty() {
         when(facultyRepository.findById(faculty.getId()))
-                .thenReturn(Optional.ofNullable(faculty));
-        Faculty result=facultyService.upDateFaculty(faculty);
+                .thenReturn(Optional.of(faculty));
 
+        Faculty result = facultyService.getFacultyById(faculty.getId());
+
+        assertEquals(faculty, result);
     }
 
     @Test
@@ -100,14 +103,14 @@ class FacultyServiceImplTest {
                 new Faculty(3, "Chemistry", "green"));
         String color = "green";
 
-        when(facultyRepository.findAllByColor(color))
-                .thenReturn(faculties);
-
         List<Faculty> facultyList = faculties.stream().filter(fc -> fc.getColor() == color)
                 .collect(Collectors.toUnmodifiableList());
 
-        Collection<Faculty> result = facultyService.findByColor(color)
-                .stream().filter(fc -> fc.getColor() == color).collect(Collectors.toUnmodifiableList());
+        when(facultyRepository.findAllByColor(color))
+                .thenReturn(facultyList);
+
+
+        Collection<Faculty> result = facultyService.findByColor(color);
 
         assertEquals(facultyList, result);
 

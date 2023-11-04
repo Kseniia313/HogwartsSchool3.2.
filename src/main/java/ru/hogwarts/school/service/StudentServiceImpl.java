@@ -57,7 +57,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Faculty getFacultyByStudentId(long studentId) {
+    public Faculty getFacultyByStudentId(long studentId)
+    {
         return readStudentById(studentId).getFaculty();
     }
 
