@@ -27,7 +27,8 @@ public class StudentController {
     }
 
     @PutMapping()
-    public Student updateStudent(@RequestBody Student student) {
+    public Student updateStudent
+            (@RequestBody Student student) {
         return studentService.updateStudent(student);
     }
 
@@ -37,7 +38,8 @@ public class StudentController {
     }
 
     @GetMapping("/byAge")
-    public Collection<Student> studentsByAge(@RequestParam int age) {
+    public Collection<Student> findStudentsByAge
+            (@RequestParam int age) {
         return studentService.readByAge(age);
     }
 

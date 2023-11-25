@@ -20,7 +20,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student createStudent(Student student) {
+    public Student createStudent(Student student)
+    {
         return studentRepository.save(student);
     }
 
@@ -28,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
     public Student readStudentById(long id) {
 
         return studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("Студент c id " + id + " не найден"));
+                .orElseThrow(() -> new StudentNotFoundException("Студент не найден"));
     }
 
     @Override
@@ -47,7 +48,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Student> readByAge(int age) {
+    public Collection<Student> readByAge(int age)
+    {
         return studentRepository.findAllByAge(age);
     }
 
