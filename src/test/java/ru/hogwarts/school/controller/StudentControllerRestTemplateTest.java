@@ -18,7 +18,11 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -122,10 +126,10 @@ public class StudentControllerRestTemplateTest {
     @Test
     void findByAgeBetween_shouldReturnStudentsCollectionAndStatus200(){
 
-        Student student1 = new Student(2L, "Nika", 15);
-        Student student2 = new Student(3L, "Kira", 17);
-        Student student3 = new Student(4L, "Arina", 18);
-        Student student4 = new Student(5L, "Mark", 20);
+        Student student1 = new Student(1L, "Nika", 10);
+        Student student2 = new Student(2L, "Olga", 15);
+        Student student3 = new Student(3L, "Kira", 17);
+        Student student4 = new Student(4L, "Mark", 20);
 
         Student saveStudent1 = studentRepository.save(student1);
         Student saveStudent2 = studentRepository.save(student2);
