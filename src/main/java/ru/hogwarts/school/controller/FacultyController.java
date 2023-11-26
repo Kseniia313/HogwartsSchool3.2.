@@ -17,26 +17,22 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty)
-    {
+    public Faculty createFaculty(@RequestBody Faculty faculty) {
         return facultyService.createFaculty(faculty);
     }
 
     @GetMapping("/{id}")
-    public Faculty getFaculty(@PathVariable long id)
-    {
+    public Faculty getFaculty(@PathVariable long id) {
         return facultyService.getFacultyById(id);
     }
 
     @PutMapping
-    public Faculty updateFaculty(@RequestBody Faculty faculty)
-    {
+    public Faculty updateFaculty(@RequestBody Faculty faculty) {
         return facultyService.upDateFaculty(faculty);
     }
 
     @DeleteMapping("/{id}")
-    public Faculty deleteFaculty(@PathVariable long id)
-    {
+    public Faculty deleteFaculty(@PathVariable long id) {
         return facultyService.deleteFaculty(id);
     }
 

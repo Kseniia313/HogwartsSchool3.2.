@@ -20,8 +20,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student createStudent(Student student)
-    {
+    public Student createStudent(Student student) {
         return studentRepository.save(student);
     }
 
@@ -48,8 +47,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Student> readByAge(int age)
-    {
+    public Collection<Student> readByAge(int age) {
         return studentRepository.findAllByAge(age);
     }
 

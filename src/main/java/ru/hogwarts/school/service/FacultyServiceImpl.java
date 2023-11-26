@@ -18,8 +18,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty createFaculty(Faculty faculty)
-    {
+    public Faculty createFaculty(Faculty faculty) {
         return facultiesRepository.save(faculty);
     }
 
@@ -47,8 +46,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Collection<Faculty> findByColor(String color)
-    {
+    public Collection<Faculty> findByColor(String color) {
         return facultiesRepository.findAllByColor(color);
     }
 
