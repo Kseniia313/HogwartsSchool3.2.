@@ -28,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
     public Student readStudentById(long id) {
 
         return studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("Студент c id " + id + " не найден"));
+                .orElseThrow(() -> new StudentNotFoundException("Студент не найден"));
     }
 
     @Override

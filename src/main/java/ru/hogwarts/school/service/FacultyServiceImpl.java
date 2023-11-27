@@ -26,7 +26,7 @@ public class FacultyServiceImpl implements FacultyService {
     public Faculty getFacultyById(long facultyId) {
 
         return facultiesRepository.findById(facultyId)
-                .orElseThrow(() -> new FacultyNotFoundException("Факультета с id " + facultyId + " не существует "));
+                .orElseThrow(() -> new FacultyNotFoundException("Факультет не найден"));
 
     }
 

@@ -27,7 +27,7 @@ public class FacultyController {
     }
 
     @PutMapping
-    public Faculty upDateFaculty(@RequestBody Faculty faculty) {
+    public Faculty updateFaculty(@RequestBody Faculty faculty) {
         return facultyService.upDateFaculty(faculty);
     }
 
@@ -37,7 +37,8 @@ public class FacultyController {
     }
 
     @GetMapping("/color")
-    public Collection<Faculty> getByColor(@RequestParam String color) {
+    public Collection<Faculty> getByColor
+            (@RequestParam String color) {
         return facultyService.findByColor(color);
     }
 
