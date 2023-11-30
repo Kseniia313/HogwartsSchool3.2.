@@ -1,0 +1,8 @@
+- Возможность получить количество всех студентов в школе. Эндпоинт должен вернуть число.
+@Query(value = "SELECT COUNT(*) FROM student", nativeQuery = true)
+
+- Возможность получить средний возраст студентов. Эндпоинт должен вернуть число.
+    @Query(value = "SELECT AVG(age) FROM student", nativeQuery = true)
+
+- Возможность получать только пять последних студентов. Последние студенты считаются теми, у кого идентификатор больше других.
+    @Query(value = "SELECT * FROM student ORDER BY id DESC LIMIT 5", nativeQuery = true)

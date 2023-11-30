@@ -1,5 +1,7 @@
 package ru.hogwarts.school.controller;
 
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import ru.hogwarts.school.service.AvatarService;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collection;
 
 
 @RestController
@@ -64,6 +67,12 @@ public class AvatarController {
                 .ok()
                 .headers(headers)
                 .body(Files.readAllBytes(avatar.toPath()));
+    }
+
+    @GetMapping(value = "/all")
+    public Collection<Avatar> getAllAvatars(@RequestParam("page") int pageNumber,
+                                            @RequestParam("size") int pageSize) {
+        return avatarService.getAllAvatars(pageNumber, pageSize);
     }
 }
 
