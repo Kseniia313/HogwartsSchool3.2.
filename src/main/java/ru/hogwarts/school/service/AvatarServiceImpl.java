@@ -1,10 +1,9 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.exception.AvatarNotFoundException;
@@ -16,13 +15,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
 
+    Logger logger = LoggerFactory.getLogger(AvatarServiceImpl.class);
     private final String avatarsDir;
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
@@ -46,6 +45,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     private Path saveToFile(Student student, MultipartFile avatarFile) throws IOException {
+        logger.info("Was invoked method for saving avatar to filePath");
         Path filePath = Path.of(avatarsDir,
                 student.getId() + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -62,7 +62,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     private void saveToDB(Path filePath, MultipartFile avatarFile, Student student) throws IOException {
-
+        logger.info("Was invoked method for saving avatar to DataBase");
         Avatar avatar = avatarRepository.findByStudent_id(student.getId()).orElse(new Avatar());
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
@@ -75,20 +75,23 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Avatar readFromDB(long id) {
+        if (!avatarRepository.existsById(id))
+            logger.error("Аватар для студента c id {} не найден", id);
         return avatarRepository.findByStudent_id(id)
                 .orElseThrow(() -> new AvatarNotFoundException("Аватар не найден"));
     }
 
     @Override
     public File readFromFile(long id) throws IOException {
+        logger.info("Was invoked method for reading avatar from File");
         Avatar avatar = readFromDB(id);
-
         return new File(avatar.getFilePath());
 
     }
 
     @Override
     public Collection<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize) {
+        logger.info("Was invoked method for getting Collection of all avatars ");
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
