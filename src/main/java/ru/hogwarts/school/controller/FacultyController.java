@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
@@ -48,4 +49,8 @@ public class FacultyController {
         return facultyService.findByNameOrColor(name, color);
     }
 
+    @GetMapping("/facultyNameWithMaxLength")
+    public ResponseEntity<String> getFacultyNameWithMaxLength() {
+        return facultyService.getFacultyNameWithMaxLength();
+    }
 }

@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
@@ -60,6 +61,24 @@ if(!facultiesRepository.existsById(facultyId))
     public Collection<Faculty> findByNameOrColor(String name, String color) {
         logger.info("Was invoked method for finding faculties by name {} or color {} ",name,color);
         return facultiesRepository.findAllByNameIgnoreCaseOrColorIgnoreCase(name, color);
+    }
+    @Override
+    public ResponseEntity <String> getFacultyNameWithMaxLength() {
+        logger.info("Was invoked method for getting faculty name with max length");
+
+        Optional<String> facultyNameWithMaxLength =
+                facultiesRepository.findAll()
+                        .stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparing(String::length));
+
+        if (facultyNameWithMaxLength.isEmpty()) {
+            logger.error("There is no faculties at all");
+            return ResponseEntity.notFound().build();
+        } else {
+            logger.debug("Faculty name with max length: {},",facultyNameWithMaxLength.get());
+            return ResponseEntity.ok(facultyNameWithMaxLength.get());
+        }
     }
 
 }
