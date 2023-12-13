@@ -10,8 +10,8 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
-
-import static org.hibernate.criterion.Projections.id;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -96,4 +96,20 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Was invoked method for getting only last five students");
         return studentRepository.getLastFiveStudents();
     }
+
+    @Override
+    public Collection<Student> getAllStudentsNameStartsWithM() {
+        logger.info("Was invoked method for getting all names of all students whose name starts with M");
+       return studentRepository.findAll().stream().sorted(Comparator.comparing(Student::getName)).
+               filter(student -> student.getName().startsWith("M"))
+                .collect(Collectors.toUnmodifiableList());
+    }
+    @Override
+    public Double averageAfeOfStudents () {
+        logger.info("Was invoked method for getting the average age of students");
+        return studentRepository.findAll().stream().
+                mapToDouble(Student::getAge).average().getAsDouble();
+    }
+
+
 }
