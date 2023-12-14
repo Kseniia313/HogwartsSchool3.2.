@@ -74,16 +74,24 @@ public class StudentController {
         return studentService.getLastFiveStudents();
     }
 
-    @GetMapping("/studentsWithM")
+    @GetMapping("/studentsWithLetter")
     Collection<Student> getStudentsStartsWithM() {
         return studentService.getAllStudentsNameStartsWithM();
     }
 
     @GetMapping("/AverageAge")
-    Double AverageAge()
-    {
+    Double AverageAge() {
         return studentService.averageAfeOfStudents();
     }
 
+    @GetMapping("/print-parallel")
+    public void getNames() {
+        studentService.getStudentNames();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void getNamesSync() throws InterruptedException {
+        studentService.getStudentNamesSync();
+    }
 }
 
