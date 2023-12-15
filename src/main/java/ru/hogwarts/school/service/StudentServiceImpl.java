@@ -150,7 +150,6 @@ public class StudentServiceImpl implements StudentService {
         new Thread(() -> {
             printStudentNamesSyncWaitNotify1(1L, 2l);
         }).start();
-
         new Thread(() -> {
             printStudentNamesSyncWaitNotify2(3L, 4L);
         }).start();
