@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
     Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     private final StudentRepository studentRepository;
+    private boolean marker = false;
 
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -142,9 +143,18 @@ public class StudentServiceImpl implements StudentService {
             printNamesSync(5);
             printNamesSync(6);
         }).start();
-
-
     }
+    @Override
+   public void getStudentNamesSyncWaitNotify() {
+        new Thread(() -> {
+            printStudentNamesSyncWaitNotify1(1L, 2l);
+        }).start();
+
+        new Thread(() -> {
+            printStudentNamesSyncWaitNotify2(3L, 4L);
+        }).start();
+    }
+
 
     private void printNames(long id) {
         String studentName = readStudentById(id).getName();
@@ -155,4 +165,37 @@ public class StudentServiceImpl implements StudentService {
         String studentName = readStudentById(id).getName();
         System.out.println(studentName + " id= " + id);
     }
-}
+
+
+    private synchronized void printStudentNamesSyncWaitNotify1(long id1, long id2) {
+        while (marker)
+            try {
+                wait();
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
+            }
+
+            String studentName = readStudentById(id1).getName();
+            String studentName1 = readStudentById(id2).getName();
+            System.out.println(studentName + " id = " + id1 + studentName1 + " id= " + id2);
+
+            marker = true;
+
+            notify();
+        }
+
+    private synchronized void printStudentNamesSyncWaitNotify2(long id1, long id2) {
+        while (!marker)
+            try {
+                wait();
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
+            }
+
+            String studentName = readStudentById(id1).getName();
+            String studentName1 = readStudentById(id2).getName();
+            System.out.println(studentName + " id = " + id1 + studentName1 + " id = " + id2);
+
+        }
+    }
+

@@ -93,5 +93,10 @@ public class StudentController {
     public void getNamesSync() throws InterruptedException {
         studentService.getStudentNamesSync();
     }
+
+    @GetMapping("/print-synchronized-wait")
+    public void getNamesSyncWaitNotify() throws InterruptedException {
+        studentService.getStudentNamesSyncWaitNotify();
+    }
 }
 

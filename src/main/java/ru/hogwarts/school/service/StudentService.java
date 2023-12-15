@@ -35,4 +35,6 @@ public interface StudentService {
 
     void getStudentNames();
     void getStudentNamesSync() ;
+
+    void getStudentNamesSyncWaitNotify();
 }
