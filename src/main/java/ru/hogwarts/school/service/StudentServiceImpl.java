@@ -144,8 +144,9 @@ public class StudentServiceImpl implements StudentService {
             printNamesSync(6);
         }).start();
     }
+
     @Override
-   public void getStudentNamesSyncWaitNotify() {
+    public void getStudentNamesSyncWaitNotify() {
         new Thread(() -> {
             printStudentNamesSyncWaitNotify1(1L, 2l);
         }).start();
@@ -175,14 +176,14 @@ public class StudentServiceImpl implements StudentService {
                 exception.printStackTrace();
             }
 
-            String studentName = readStudentById(id1).getName();
-            String studentName1 = readStudentById(id2).getName();
-            System.out.println(studentName + " id = " + id1 + studentName1 + " id= " + id2);
+        String studentName = readStudentById(id1).getName();
+        String studentName1 = readStudentById(id2).getName();
+        System.out.println(studentName + " id = " + id1 + studentName1 + " id= " + id2);
 
-            marker = true;
+        marker = true;
 
-            notify();
-        }
+        notify();
+    }
 
     private synchronized void printStudentNamesSyncWaitNotify2(long id1, long id2) {
         while (!marker)
@@ -192,10 +193,10 @@ public class StudentServiceImpl implements StudentService {
                 exception.printStackTrace();
             }
 
-            String studentName = readStudentById(id1).getName();
-            String studentName1 = readStudentById(id2).getName();
-            System.out.println(studentName + " id = " + id1 + studentName1 + " id = " + id2);
+        String studentName = readStudentById(id1).getName();
+        String studentName1 = readStudentById(id2).getName();
+        System.out.println(studentName + " id = " + id1 + studentName1 + " id = " + id2);
 
-        }
     }
+}
 

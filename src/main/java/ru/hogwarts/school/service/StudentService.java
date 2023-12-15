@@ -34,7 +34,8 @@ public interface StudentService {
     Double averageAfeOfStudents();
 
     void getStudentNames();
-    void getStudentNamesSync() ;
+
+    void getStudentNamesSync();
 
     void getStudentNamesSyncWaitNotify();
 }
