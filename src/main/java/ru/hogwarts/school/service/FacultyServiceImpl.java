@@ -29,8 +29,8 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty getFacultyById(long facultyId) {
-if(!facultiesRepository.existsById(facultyId))
-    logger.error("Факультет c id {} не найден", facultyId);
+        if (!facultiesRepository.existsById(facultyId))
+            logger.error("Факультет c id {} не найден", facultyId);
         return facultiesRepository.findById(facultyId)
                 .orElseThrow(() -> new FacultyNotFoundException("Факультет не найден"));
 
@@ -38,14 +38,14 @@ if(!facultiesRepository.existsById(facultyId))
 
     @Override
     public Faculty upDateFaculty(Faculty faculty) {
-        logger.info("Was invoked method for update faculty c id {}",faculty.getId());
+        logger.info("Was invoked method for update faculty c id {}", faculty.getId());
         getFacultyById(faculty.getId());
         return facultiesRepository.save(faculty);
     }
 
     @Override
     public Faculty deleteFaculty(long facultyId) {
-        logger.info("Was invoked method for remove faculty c id {}",facultyId);
+        logger.info("Was invoked method for remove faculty c id {}", facultyId);
         Faculty faculty = getFacultyById(facultyId);
         facultiesRepository.delete(faculty);
         return faculty;
@@ -53,30 +53,31 @@ if(!facultiesRepository.existsById(facultyId))
 
     @Override
     public Collection<Faculty> findByColor(String color) {
-        logger.info("Was invoked method for finding faculty by color {}",color);
+        logger.info("Was invoked method for finding faculty by color {}", color);
         return facultiesRepository.findAllByColor(color);
     }
 
     @Override
     public Collection<Faculty> findByNameOrColor(String name, String color) {
-        logger.info("Was invoked method for finding faculties by name {} or color {} ",name,color);
+        logger.info("Was invoked method for finding faculties by name {} or color {} ", name, color);
         return facultiesRepository.findAllByNameIgnoreCaseOrColorIgnoreCase(name, color);
     }
+
     @Override
-    public ResponseEntity <String> getFacultyNameWithMaxLength() {
+    public ResponseEntity<String> getFacultyNameWithMaxLength() {
         logger.info("Was invoked method for getting faculty name with max length");
 
         Optional<String> facultyNameWithMaxLength =
                 facultiesRepository.findAll()
                         .stream()
-                .map(Faculty::getName)
-                .max(Comparator.comparing(String::length));
+                        .map(Faculty::getName)
+                        .max(Comparator.comparing(String::length));
 
         if (facultyNameWithMaxLength.isEmpty()) {
             logger.error("There is no faculties at all");
             return ResponseEntity.notFound().build();
         } else {
-            logger.debug("Faculty name with max length: {},",facultyNameWithMaxLength.get());
+            logger.debug("Faculty name with max length: {},", facultyNameWithMaxLength.get());
             return ResponseEntity.ok(facultyNameWithMaxLength.get());
         }
     }

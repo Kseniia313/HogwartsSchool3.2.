@@ -13,6 +13,7 @@ import ru.hogwarts.school.service.StudentServiceImpl;
 public class ControllerExceptionHandler {
     private long id;
     Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+
     @ExceptionHandler({StudentAlreadyExistException.class, FacultyAlreadyExistException.class})
     public ResponseEntity<String> handleException(RuntimeException exception) {
 

@@ -31,6 +31,11 @@ public interface StudentService {
 
     Collection<Student> getAllStudentsNameStartsWithM();
 
-
     Double averageAfeOfStudents();
+
+    void getStudentNames();
+
+    void getStudentNamesSync();
+
+    void getStudentNamesSyncWaitNotify();
 }

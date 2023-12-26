@@ -19,5 +19,5 @@ public interface FacultyService {
 
     Collection<Faculty> findByNameOrColor(String name, String color);
 
-    ResponseEntity <String> getFacultyNameWithMaxLength();
+    ResponseEntity<String> getFacultyNameWithMaxLength();
 }
